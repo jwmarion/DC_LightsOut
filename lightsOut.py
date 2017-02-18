@@ -1,5 +1,5 @@
 #project 1b 'lights out'
-import pygame, math
+import pygame, math, random
 
 grid = [[-1]*5 for x in range(5)]
 
@@ -30,6 +30,11 @@ def setLights(x,y):
 
 def setLevel(level):
     # global grid
+    for x in range(5):
+        for y in range(5):
+            grid[x][y] = -1
+
+
     if level == 1:
         grid[0][2] = 1
         grid[2][2] = 1
@@ -46,6 +51,11 @@ def setLevel(level):
         grid[2][3] = 1
         grid[2][4] = 1
 
+        grid[4][0] = 1
+        grid[4][1] = 1
+        grid[4][3] = 1
+        grid[4][4] = 1
+
     if level == 3:
         grid[0][1] = 1
         grid[0][2] = 1
@@ -57,6 +67,7 @@ def setLevel(level):
         grid[1][3] = 1
         grid[1][4] = 1
 
+        grid[3][0] = 1
         grid[3][1] = 1
         grid[3][2] = 1
         grid[3][3] = 1
@@ -105,6 +116,14 @@ def setLevel(level):
         grid[4][3] = 1
         grid[4][4] = 1
 
+    if level > 5:
+        for x in range(5):
+            for y in range(5):
+                if random.randrange(0,3) == 1:
+                    grid[x][y] = True
+                else:
+                    grid[x][y] = False
+
 def main():
     #colors and variables
     width = 520
@@ -115,7 +134,7 @@ def main():
     #inits
     pygame.init()
     screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption('My Game')
+    pygame.display.set_caption('Bug Out!')
     clock = pygame.time.Clock()
     inProgress = False
     #text
@@ -123,10 +142,15 @@ def main():
     resetText = font.render("Reset", True, (0,0,0))
     levelText = font.render("Level: %d" % level, True, (0,0,0))
     quitText = font.render("Quit", True, (0,0,0))
+    #assets
+    background_image = pygame.image.load('./media/river.png').convert_alpha()
+    fly_image = pygame.image.load('./media/fly.png').convert_alpha()
+    tile_image = pygame.image.load('./media/wood.png').convert_alpha()
 
-    background_image = pygame.image.load('/media/river.jpg').convert_alpha()
-    fly_image = pygame.image.load('/images/fly.png').convert_alpha()
-    tile_image = pygame.image.load('/images/wood.png').convert_alpha()
+    pygame.mixer.music.load('./media/marimba.wav')
+    pygame.mixer.music.play(-1)
+    squawk_sound = pygame.mixer.Sound('./media/squawk.wav')
+    #bonk_sound = pygame.mixer.Sound('./media/bamboo.wav')
     # Game initialization
 
 
@@ -145,17 +169,20 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
                 #setLights(getButton(x),getButton(y))
-                if y > 510:
-                    if x >= 10 and x <=170 and y >= 520 and y <= 590:
-                        setLevel(level)
-                    if x >=180 and x <= 340 and y >= 520 and y <=590:
-                        pass
-                    if x >= 350 and x <= 510 and y >= 520 and y <=590:
-                        pygame.quit()
+                if x <  10 or x > 500 or y < 10:
+                    pass
                 else:
-                    t = getButton(x,y)
-                    setLights(t[0],t[1])
-
+                    if y > 510:
+                        if x >= 10 and x <=170 and y >= 520 and y <= 590:
+                            setLevel(level)
+                        if x >=180 and x <= 340 and y >= 520 and y <=590:
+                            pass
+                        if x >= 350 and x <= 510 and y >= 520 and y <=590:
+                            pygame.quit()
+                    else:
+                        #bonk_sound.play()
+                        t = getButton(x,y)
+                        setLights(t[0],t[1])
 
 
             if event.type == pygame.QUIT:
@@ -173,7 +200,8 @@ def main():
             for y in range(0,5):
                 pygame.draw.rect(screen, (0,0,0),  ((10+(x * 100)),  (10 + (y * 100)),   100,   100), 4)
                 if (grid[x][y]) == 1:
-                    pygame.draw.rect(screen, (159, 59, 164),  ((10+(x * 100)),  (10 + (y * 100)),   100,   100))
+                    screen.blit(tile_image, (10+(x*100),10+(y*100)))
+                    screen.blit(fly_image, (10+(x*100),10+(y*100)))
                     testWin += 1
 
         pygame.draw.rect(screen, (61, 104, 177), (10,520, 160,70))
@@ -186,6 +214,7 @@ def main():
 
         if testWin == 0:
             level += 1
+            squawk_sound.play()
             inProgress = False
             #win
 
