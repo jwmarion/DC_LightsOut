@@ -11,8 +11,6 @@ def getButton(x,y): #turns inputs into cooresponding button
     return (x,y)
 
 def setLights(x,y):
-
-
     if x != 4:
         grid[x + 1][y] = grid[x + 1][y] * -1
     if x != 0:
@@ -33,7 +31,6 @@ def setLevel(level):
     for x in range(5):
         for y in range(5):
             grid[x][y] = -1
-
 
     if level == 1:
         grid[0][2] = 1
@@ -120,9 +117,9 @@ def setLevel(level):
         for x in range(5):
             for y in range(5):
                 if random.randrange(0,3) == 1:
-                    grid[x][y] = True
+                    grid[x][y] = 1
                 else:
-                    grid[x][y] = False
+                    grid[x][y] = -1
 
 def main():
     #colors and variables
