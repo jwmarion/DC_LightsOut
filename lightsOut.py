@@ -147,7 +147,7 @@ def main():
     pygame.mixer.music.load('./media/marimba.wav')
     pygame.mixer.music.play(-1)
     squawk_sound = pygame.mixer.Sound('./media/squawk.wav')
-    #bonk_sound = pygame.mixer.Sound('./media/bamboo.wav')
+    bonk_sound = pygame.mixer.Sound('./media/bamb_thonk.wav')
     # Game initialization
 
 
@@ -177,7 +177,7 @@ def main():
                         if x >= 350 and x <= 510 and y >= 520 and y <=590:
                             pygame.quit()
                     else:
-                        #bonk_sound.play()
+                        bonk_sound.play()
                         t = getButton(x,y)
                         setLights(t[0],t[1])
 
