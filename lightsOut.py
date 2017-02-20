@@ -116,10 +116,9 @@ def setLevel(level):
     if level > 5:
         for x in range(5):
             for y in range(5):
-                if random.randrange(0,3) == 1:
-                    grid[x][y] = 1
-                else:
-                    grid[x][y] = -1
+                if random.randrange(0,5) <= 2:
+                    setLights(x,y)
+            
 
 def main():
     #colors and variables
